@@ -5,7 +5,7 @@
 <div class="container">
   <div class="row">
     <div class="col s12">
-      <h2 class="welcome-msg">Welcome, {{user_name}}</h2>
+      <a href="/refresh/">Refresh books</a>
 
       {% if messages %}
         <div class="card success-flash">
@@ -19,64 +19,42 @@
 
       <ul class="collection with-header" id="eventsList">
         <li class="collection-header"><h4>All Books</h4></li>
-        {% for book in books %}
-          <li class="collection-item">{{ request.name }} <a href="/deleteEventRequest/{{ request.request_id }}"><i class="material-icons right delete-icon">delete</i></a><span class="right">Scheduled for <b>{{ request.start_datetime }}</b> to <b>{{ request.end_datetime }}</b></span></li>
-        {% endfor %}
       </ul>
 
-      <br/>
-      <!-- <div class="card">
-        <div class="card-content">
-          <form method="POST">
-            <h5 id="requestEventForm" style="margin-top:0px; margin-bottom:20px;">Request an Event</h5>
-            {% if error %}<p class="error-msg">{{error}}</p>{% endif %}
-            <br/>
-            <div class="input-field">
-              <i class="material-icons prefix">event</i>
-              <input value="{{ request.form.eventName }}" id="eventName" name="eventName" type="text" class="validate">
-              <label for="eventName">Event Name</label>
-            </div>
-
-            <div class="row">
-              <div class="col s6">
-                <div class="input-field">
-                  <i class="material-icons prefix">calendar_today</i>
-                  <input id="startDate" value="{{ request.form.startDate }}" name="startDate" type="text" class="datepicker validate">
-                  <label for="startDate">Start Date</label>
-                </div>
-              </div>
-              <div class="col s6">
-                <div class="input-field">
-                  <i class="material-icons prefix">calendar_today</i>
-                  <input id="endDate" value="{{ request.form.endDate }}" name="endDate" type="text" class="datepicker validate">
-                  <label for="endDate">End Date</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col s6">
-                <div class="input-field">
-                  <i class="material-icons prefix">watch_later</i>
-                  <input id="beginTime" value="{{ request.form.beginTime }}" name="beginTime" type="text" class="timepicker validate">
-                  <label for="beginTime">Start Time</label>
-                </div>
-              </div>
-              <div class="col s6">
-                <div class="input-field">
-                  <i class="material-icons prefix">watch_later</i>
-                  <input id="endTime" value="{{ request.form.endTime }}" name="endTime" type="text" class="timepicker validate">
-                  <label for="endTime">End Time</label>
+      <div class="row">
+        {% for book in books %}
+          <div class="col s12">
+            <div class="card">
+              <div class="card-content">
+                <div class="row" style="margin-bottom:0px;">
+                  <div class="col s4">
+                    <div class="left-title valign-wrapper">
+                      <img class="valighn-wrapper" src="/static/{{ book.image }}">
+                    </div>
+                  </div>
+                  <div class="col s8">
+                    <p><b>{{ book.title }}</b></p>
+                    <p> by <b>{{ book.author }}</b></p>
+                    <br/>
+                    {% if book.rating == null %}
+                      <p> No user ratings. </p>
+                    {% else %}
+                      <p> User rating: {{ book.rating }} </p>
+                    {% endif %}
+                    <a href="{{ url_for('review', book_title=book.title) }}">
+                      <button style="margin-top:5px;" class="btn waves-effect waves-light">
+                        Leave a Review
+                        <i class="material-icons left">rate_review</i>
+                      </button>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <button class="btn waves-effect waves-light" type="submit" name="action">Add Request
-              <i class="material-icons right">add</i>
-            </button>
-          </form>
+          </div>
+          {% endfor %}
         </div>
-      </div> -->
+      <br/>
     </div>
   </div>
 </div>
