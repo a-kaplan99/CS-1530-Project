@@ -130,6 +130,8 @@ def review(book_title):
 
 			db.session.add(Update('review', session['username'], book_title, request.form['content'], request.form['rating'], time.time()))
 			db.session.commit()
+			db.session.flush()
+			flash("Submission successful")
 	return render_template('review.html', book=Book.query.filter_by(title=book_title).first(), error=error)
 
 @app.route("/refresh/")

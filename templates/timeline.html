@@ -21,7 +21,7 @@
         {% for update in updates %}
           {% if update.type == 'review' %}
             <li class="collection-item">
-              <h5> {{ update.author_username }} left a review for "{{ update.book_title }}": </h5>
+              <h5> {{ update.author_username }} left a review for <a href="/books/"> {{ update.book_title }} </a>: </h5>
               <p> {{ update.content }} </p>
               <p> {{ update.rating }}/10 </p>
             </li>
