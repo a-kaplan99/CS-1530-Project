@@ -19,6 +19,9 @@
     <ul id="nav-mobile" class="right hide-on-med-and-down">
       <li><a href="/timeline/">Timeline<i class="material-icons right">wysiwyg</i></a></li>
       <li><a href="/books/">Books<i class="material-icons right">menu_book</i></a></li>
+      {% if session['username']=='admin' %}
+        <li><a href="/manage/">Manage<i class="material-icons right">admin_panel_settings</i></a></li>
+      {% endif %}
       <li><a href="/logout/">Logout<i class="material-icons right">exit_to_app</i></a></li>
     </ul>
   </div>

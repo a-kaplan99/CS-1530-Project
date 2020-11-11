@@ -26,6 +26,9 @@ db.init_app(app)
 def initdb_command():
 	"""Creates the database tables."""
 	db.create_all()
+	owner = User('admin', generate_password_hash('admin'))
+	db.session.add(owner)
+	db.session.commit()
 	print('Initialized the database.')
 
 @app.route("/")
@@ -50,7 +53,7 @@ def login():
 			if user != None:
 				error = login(user, request.form["password"])
 				if error == None:
-					return redirect(url_for('books'))
+					return redirect(url_for('timeline'))
 
 	return render_template('login.html', error=error)
 
@@ -132,7 +135,45 @@ def review(book_title):
 			db.session.commit()
 			db.session.flush()
 			flash("Submission successful")
+			return redirect(url_for('timeline'))
 	return render_template('review.html', book=Book.query.filter_by(title=book_title).first(), error=error)
+
+@app.route("/manage/", methods=['POST', 'GET'])
+def manage():
+	error = None
+	if session['username'] == 'admin':
+		if request.method == 'POST':
+			if not request.form['username']:
+				error = 'You have to enter a username'
+			elif not request.form['password']:
+				error = 'You have to enter a password'
+			elif User.query.filter_by(username=request.form['username']).first() is not None:
+				error = 'User already exists'
+			else:
+				user = User(request.form['username'], generate_password_hash(request.form['password']))
+				db.session.add(user)
+				db.session.commit()
+				db.session.flush()
+
+				flash("New user " + request.form['username'] + " successfully registered")
+		return render_template('manage.html', users=User.query.order_by(User.username.asc()).all(), error=error)
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/remove/<username>/",methods=['POST', 'GET'])
+def remove(username):
+	error = None
+	if session['username'] == 'admin':
+		user = User.query.filter_by(username=username).first()
+		db.session.delete(user)
+		db.session.commit()
+		db.session.flush()
+		flash("User " + username + " successfully removed")
+		return render_template('manage.html', users=User.query.order_by(User.username.asc()).all(), error=error)
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
 
 @app.route("/refresh/")
 def refresh():
@@ -141,8 +182,3 @@ def refresh():
 		db.session.commit()
 		db.session.flush()
 	return redirect(url_for('books'))
-
-if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-	db.create_all()
-    app.run(threaded=True, port=5000)
