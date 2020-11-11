@@ -142,28 +142,7 @@ def refresh():
 		db.session.flush()
 	return redirect(url_for('books'))
 
-# @app.route("/deleteEventRequest/<request_id>",  methods=["GET"])
-# def delete_event_request(request_id):
-# 	if 'cust_id' not in session:
-# 		abort(401) # Not authorized
-# 	req = EventRequest.query.filter_by(request_id=request_id).first()
-# 	db.session.delete(req)
-# 	db.session.commit()
-# 	return redirect(url_for('events'))
-#
-# def create_event_request(form):
-# 	inputStartDatetime = form["startDate"] + " " + form["beginTime"]
-# 	inputEndDatetime = form["endDate"] + " " + form["endTime"]
-# 	# Will be in the form "Oct 16, 2019 07:13 PM"
-# 	beginDatetime = datetime.strptime(inputStartDatetime, '%b %d, %Y %I:%M %p')
-# 	endDatetime = datetime.strptime(inputEndDatetime, '%b %d, %Y %I:%M %p')
-# 	newReq = EventRequest(form["eventName"], beginDatetime, endDatetime, session["cust_id"])
-# 	for req in EventRequest.query.all():
-# 		# Check to see if any existing event requests overlap with the new one
-# 		if newReq.start_datetime.date() <= req.end_datetime.date() and newReq.end_datetime.date() >= req.start_datetime.date():
-# 			return False
-#
-# 	# Add the new event request to the DB!
-# 	db.session.add(newReq)
-# 	db.session.commit()
-# 	return True
+if __name__ == '__main__':
+    # Threaded option to enable multiple instances for multiple user access support
+	db.create_all()
+    app.run(threaded=True, port=5000)
