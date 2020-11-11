@@ -1,0 +1,11 @@
+The Catcher in the Rye|J.D. Salinger|catcher.jpg
+The Aleph and other stories|Jorge Luis Borges|aleph.png
+Why We Sleep|Matthew Walker|aleph.png
+Ficciones|Jorge Luis Borges|ficciones.png
+Symbolic Exchange and Death|Jean Baudrillard|symbolic.png
+Pitch Anything|Oren Klaff|pitch.jpg
+The Very Hungry Caterpillar|Eric Carle|hungry.png
+Cracking the Coding Interview|Gayle Laakmann McDowell|interview.jpg
+The Interpretation of Dreams|Sigmund Freud|dreams.png
+Thinking, Fast and Slow|Daniel Kahneman|thinking.jpg
+The Master and Margarita|Mikhail Bulgakov|master.png

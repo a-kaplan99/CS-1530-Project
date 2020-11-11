@@ -27,6 +27,16 @@ def initdb_command():
 	"""Creates the database tables."""
 	db.create_all()
 	owner = User('admin', generate_password_hash('admin'))
+
+	# add books to the db
+	file1 = open('books.txt', 'r')
+	Lines = file1.readlines()
+	# Strips the newline character
+	for line in Lines:
+		elems = line.split('|')
+		db.session.add(Book(elems[0], elems[1], elems[2]))
+	file1.close()
+
 	db.session.add(owner)
 	db.session.commit()
 	print('Initialized the database.')
@@ -174,11 +184,3 @@ def remove(username):
 	else:
 		flash("You do not have administrative priveleges")
 		return redirect(url_for('timeline'))
-
-@app.route("/refresh/")
-def refresh():
-	if Book.query.filter_by(title='The Catcher in the Rye').first() is None:
-		db.session.add(Book('The Catcher in the Rye', 'J.D. Salinger', 'catcher.jpg'))
-		db.session.commit()
-		db.session.flush()
-	return redirect(url_for('books'))

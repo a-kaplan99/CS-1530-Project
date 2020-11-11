@@ -8,12 +8,7 @@ class User(db.Model):
 	pw_hash = db.Column(db.String(64), nullable=False)
 	currently_reading = db.Column(db.String(80), db.ForeignKey('book.title'))
 
-	updates = db.relationship('Update', backref='author')
-
-	follows = db.relationship('User', secondary='follows', # uses the table follows to connect the two users
-		primaryjoin='User.username==follows.c.follower_username',
-		secondaryjoin='User.username==follows.c.followee_username',
-		backref=db.backref('followed_by', lazy='dynamic'), lazy='dynamic')
+	updates = db.relationship('Update', backref='author', cascade='all, delete')
 
 	def __init__(self, username, pw_hash):
 		self.username = username
@@ -21,11 +16,6 @@ class User(db.Model):
 
 	def __repr__(self):
 		return '<User {}>'.format(self.username)
-
-follows = db.Table('follows',
-	db.Column('follower_username', db.Integer, db.ForeignKey('user.username')),
-	db.Column('followee_username', db.Integer, db.ForeignKey('user.username'))
-)
 
 class Update(db.Model):
 	update_id = db.Column(db.Integer, primary_key=True)
