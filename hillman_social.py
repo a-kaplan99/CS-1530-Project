@@ -186,4 +186,4 @@ def remove(username):
 		return redirect(url_for('timeline'))
 
 if __name__ == "__main__"
-	app.run()
+	hillman_social.run()
