@@ -184,3 +184,6 @@ def remove(username):
 	else:
 		flash("You do not have administrative priveleges")
 		return redirect(url_for('timeline'))
+
+if __name__ == '__main__':
+	app.run()
