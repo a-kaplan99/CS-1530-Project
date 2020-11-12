@@ -1,1 +1,1 @@
-web: gunicorn app:hillman_social
+web: gunicorn hillman_social:hillman_social
