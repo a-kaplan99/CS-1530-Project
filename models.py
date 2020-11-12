@@ -6,11 +6,10 @@ db = SQLAlchemy()
 class User(db.Model):
 	username = db.Column(db.String(24), primary_key=True)
 	pw_hash = db.Column(db.String(64), nullable=False)
-	currently_reading = db.Column(db.String(80), db.ForeignKey('book.title'))
 
 	updates = db.relationship('Update', backref='author', cascade='all, delete')
 
-	def __init__(self, username, pw_hash):
+	def __init__(self, username, pw_hash, currently_reading):
 		self.username = username
 		self.pw_hash = pw_hash
 

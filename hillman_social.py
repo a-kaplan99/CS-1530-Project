@@ -26,7 +26,7 @@ db.init_app(app)
 def initdb_command():
 	"""Creates the database tables."""
 	db.create_all()
-	owner = User('admin', generate_password_hash('admin'))
+	owner = User('admin', generate_password_hash('admin'), None)
 
 	# add books to the db
 	file1 = open('books.txt', 'r')
@@ -82,7 +82,7 @@ def register():
 		elif not request.form['password']:
 			error = 'You have to enter a password'
 		else:
-			user = User(request.form['username'], generate_password_hash(request.form['password']))
+			user = User(request.form['username'], generate_password_hash(request.form['password']), None)
 			db.session.add(user)
 			db.session.commit()
 			db.session.flush()
@@ -148,6 +148,17 @@ def review(book_title):
 			return redirect(url_for('timeline'))
 	return render_template('review.html', book=Book.query.filter_by(title=book_title).first(), error=error)
 
+@app.route("/begin/<book_title>/", methods=['GET', 'POST'])
+def begin(book_title):
+	if 'username' not in session:
+		abort(401)
+	error = None
+	db.session.add(Update('reading', session['username'], book_title, None, None, time.time()))
+	db.session.commit()
+	db.session.flush()
+	flash('Enjoy \"' + book_title + '\"!')
+	return redirect(url_for('books'))
+
 @app.route("/manage/", methods=['POST', 'GET'])
 def manage():
 	error = None
@@ -171,7 +182,7 @@ def manage():
 		flash("You do not have administrative priveleges")
 		return redirect(url_for('timeline'))
 
-@app.route("/remove/<username>/",methods=['POST', 'GET'])
+@app.route("/remove/<username>/", methods=['POST', 'GET'])
 def remove(username):
 	error = None
 	if session['username'] == 'admin':

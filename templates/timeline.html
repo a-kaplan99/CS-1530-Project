@@ -25,6 +25,10 @@
               <p>{{ update.content }}</p>
               <p>{{ update.rating }}/10</p>
             </li>
+          {% elif update.type == 'reading' %}
+          <li class="collection-item">
+            <h5> {{ update.author_username }} has begun reading <a href="/books/"> {{ update.book_title }}</a>: </h5>
+          </li>
           {% endif %}
         {% endfor %}
       </ul>
