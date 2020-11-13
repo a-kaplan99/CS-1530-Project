@@ -102,6 +102,39 @@ def books():
 		abort(404)
 	return render_template("books.html", error=error, user_name=user.username, books=books)
 
+@app.route("/suggested_books/",  methods=["POST", "GET"])
+def suggested_books():
+	error = None
+	if 'username' not in session:
+		abort(401) # Not authorized
+	# Get the user
+	user = User.query.filter_by(username=session['username']).first()
+	if not user:
+		abort(404)
+
+	# get user's prefered genre & validate
+	if user.reading is None:
+		flash('Start reading a book to get more recommendations')
+		return redirect(url_for('books'))
+
+	pref_genre = Book.query.filter_by(title=user.reading).first().genre
+
+	if pref_genre is None:
+		flash('Something went wrong')
+		return redirect(url_for('books'))
+
+	print(pref_genre)
+
+	books = Book.query.order_by(Book.rating.desc()).all()
+
+	for book in books:
+		print(book.title + ': ' + book.genre)
+		if book.genre != pref_genre or book.title == user.reading:
+			print('removing')
+			books.remove(book)
+
+	return render_template("books.html", error=error, user_name=user.username, books=books)
+
 @app.route("/timeline/",  methods=["POST", "GET"])
 def timeline():
 	error = None
@@ -126,7 +159,7 @@ def review(book_title):
 			# update rating for book
 			book = Book.query.filter_by(title=book_title).first()
 			old_rating = book.rating
-			if old_rating is None:
+			if old_rating == 0:
 				book.rating = request.form['rating']
 				book.num_ratings = 1
 			else:
@@ -145,6 +178,11 @@ def begin(book_title):
 	if 'username' not in session:
 		abort(401)
 	error = None
+	user = User.query.filter_by(username=session['username']).first()
+	book = Book.query.filter_by(title=book_title).first()
+	if not user:
+		abort(404)
+	user.reading = book_title
 	db.session.add(Update('reading', session['username'], book_title, None, None, time.time()))
 	db.session.commit()
 	db.session.flush()
@@ -199,6 +237,16 @@ def remove(username):
 		flash("You do not have administrative priveleges")
 		return redirect(url_for('timeline'))
 
+@app.route("/remove_update/<update_id>/", methods=['POST', 'GET'])
+def remove_update(update_id):
+	error = None
+	update = Update.query.filter_by(update_id=update_id).first()
+	db.session.delete(update)
+	db.session.commit()
+	db.session.flush()
+	flash("Update successfully removed")
+	return redirect(url_for('timeline'))
+
 @app.route("/showbooks/")
 def showbooks():
 	if session['username'] == 'admin':
@@ -246,7 +294,7 @@ def loadbooks():
 		# Strips the newline character
 		for line in Lines:
 			elems = line.split('|')
-			db.session.add(Book(elems[0], elems[1], elems[2], elems[3]))
+			db.session.add(Book(elems[0], elems[1], elems[2], elems[3], 0))
 			db.session.commit()
 			db.session.flush()
 		file1.close()

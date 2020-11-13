@@ -44,14 +44,15 @@ class Book(db.Model):
 	author = db.Column(db.String(80), nullable=False)
 	genre = db.Column(db.String(80), nullable=False)
 	image = db.Column(db.String(80), nullable=False)
-	rating = db.Column(db.Integer, nullable=True)
+	rating = db.Column(db.Integer, nullable=False)
 	num_ratings = db.Column(db.Integer, nullable=True)
 
-	def __init__(self, title, author, genre, image):
+	def __init__(self, title, author, genre, image, rating):
 			self.title = title
 			self.author = author
 			self.genre = genre
 			self.image = image
+			self.rating = rating
 
 	def __repr__(self):
 			return '<Book {}'.format(self.title)

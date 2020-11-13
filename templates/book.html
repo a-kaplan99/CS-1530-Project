@@ -31,7 +31,7 @@
                     <p> by <b>{{ book.author }}</b></p>
                     <p> Genre: {{ book.genre }}</p>
                     <br/>
-                    {% if book.rating is none %}
+                    {% if book.rating == 0 %}
                       <p> No user ratings. </p>
                     {% else %}
                       <p> User rating: {{ book.rating }} </p>

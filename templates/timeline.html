@@ -30,6 +30,14 @@
                     {% elif update.type == 'reading' %}
                       <h5><strong>{{ update.author_username }}</strong> has begun reading <a href="{{ url_for('book', book_title=update.book_title) }}">{{ update.book_title }}</a></h5>
                     {% endif %}
+                    {% if user_name == 'admin' or user_name == update.author_username %}
+                      <a href="{{ url_for('remove_update', update_id=update.update_id)}}">
+                        <button style="margin-top:5px;" class="btn waves-effect waves-light">
+                          Delete Post
+                          <i class="material-icons left">delete</i>
+                        </button>
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
               </div>

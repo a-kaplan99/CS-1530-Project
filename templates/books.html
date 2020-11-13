@@ -17,7 +17,7 @@
       {% endif %}
 
       <ul class="collection with-header" id="eventsList">
-        <li class="collection-header"><h4><center><a href="/books/">Alphabetical</a> &emsp; | &emsp; <a href="/books/suggested/">Suggested</a></h4></li>
+        <li class="collection-header"><h4><center><a href="/books/">Alphabetical</a> &emsp; | &emsp; <a href="{{ url_for('suggested_books') }}">Suggested</a></h4></li>
       </ul>
 
       <div class="row">
@@ -36,7 +36,7 @@
                     <p> by <b>{{ book.author }}</b></p>
                     <p> Genre: {{ book.genre }}</p>
                     <br/>
-                    {% if book.rating is none %}
+                    {% if book.rating == 0 %}
                       <p> No user ratings. </p>
                     {% else %}
                       <p> User rating: {{ book.rating }} </p>
