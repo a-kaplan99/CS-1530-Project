@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Books{% endblock %}
+{% block title %}{{ book.title }}{% endblock %}
 {% block body %}
 {% with messages = get_flashed_messages() %}
 <div class="container">
@@ -16,12 +16,7 @@
         </div>
       {% endif %}
 
-      <ul class="collection with-header" id="eventsList">
-        <li class="collection-header"><h4><center><a href="/books/">Alphabetical</a> &emsp; | &emsp; <a href="/books/suggested/">Suggested</a></h4></li>
-      </ul>
-
       <div class="row">
-        {% for book in books %}
           <div class="col s12">
             <div class="card">
               <div class="card-content">
@@ -32,7 +27,7 @@
                     </div>
                   </div>
                   <div class="col s8">
-                    <p><b><a href="{{ url_for('book', book_title=book.title) }}">{{ book.title }}</a></b></p>
+                    <p><b>{{ book.title }}</b></p>
                     <p> by <b>{{ book.author }}</b></p>
                     <p> Genre: {{ book.genre }}</p>
                     <br/>
@@ -58,7 +53,6 @@
               </div>
             </div>
           </div>
-          {% endfor %}
         </div>
       <br/>
     </div>

@@ -27,15 +27,7 @@ def initdb_command():
 	"""Creates the database tables."""
 	db.create_all()
 
-	# add books to the db
-	file1 = open('books.txt', 'r')
-	Lines = file1.readlines()
-	# Strips the newline character
-	for line in Lines:
-		elems = line.split('|')
-		db.session.add(Book(elems[0], elems[1], elems[2], elems[3]))
-	file1.close()
-
+	# add admin as the first owner
 	owner = User('admin', generate_password_hash('admin'))
 	db.session.add(owner)
 	db.session.commit()
@@ -157,7 +149,18 @@ def begin(book_title):
 	db.session.commit()
 	db.session.flush()
 	flash('Enjoy \"' + book_title + '\"!')
-	return redirect(url_for('books'))
+	return redirect(url_for('timeline'))
+
+@app.route("/book/<book_title>/", methods=['GET', 'POST'])
+def book(book_title):
+	if 'username' not in session:
+		abort(401)
+	error = None
+	user = User.query.filter_by(username=session['username']).first()
+	book = Book.query.filter_by(title=book_title).first()
+	if not user:
+		abort(404)
+	return render_template("book.html", error=error, user_name=user.username, book=book)
 
 @app.route("/manage/", methods=['POST', 'GET'])
 def manage():
@@ -225,6 +228,41 @@ def loadusers():
 			db.session.commit()
 			db.session.flush()
 		file1.close()
+
+		return redirect(url_for('manage'))
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/loadbooks/")
+def loadbooks():
+	if session['username'] == 'admin':
+		file1 = open('users.txt', 'r')
+		Lines = file1.readlines()
+
+		# add books to the db
+		file1 = open('books.txt', 'r')
+		Lines = file1.readlines()
+		# Strips the newline character
+		for line in Lines:
+			elems = line.split('|')
+			db.session.add(Book(elems[0], elems[1], elems[2], elems[3]))
+			db.session.commit()
+			db.session.flush()
+		file1.close()
+
+		return redirect(url_for('manage'))
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/clearbooks/")
+def clearbooks():
+	if session['username'] == 'admin':
+
+		Book.query.delete()
+		db.session.commit()
+		db.session.flush()
 
 		return redirect(url_for('manage'))
 	else:

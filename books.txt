@@ -2,7 +2,7 @@ The Catcher in the Rye|J.D. Salinger|fiction|catcher.jpg
 The Aleph and other stories|Jorge Luis Borges|fiction|aleph.png
 Why We Sleep|Matthew Walker|nonfiction|sleep.jpg
 Ficciones|Jorge Luis Borges|fiction|ficciones.png
-Symbolic Exchange and Death|nonfiction|Jean Baudrillard|symbolic.png
+Symbolic Exchange and Death|Jean Baudrillard|nonfiction|symbolic.png
 Pitch Anything|Oren Klaff|self-help|pitch.jpg
 The Very Hungry Caterpillar|Eric Carle|kids|hungry.png
 Cracking the Coding Interview|Gayle Laakmann McDowell|self-help|interview.jpg

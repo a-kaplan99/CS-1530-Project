@@ -6,8 +6,11 @@ db = SQLAlchemy()
 class User(db.Model):
 	username = db.Column(db.String(24), primary_key=True)
 	pw_hash = db.Column(db.String(64), nullable=False)
+	reading = db.Column(db.String(80), db.ForeignKey('book.title'), nullable=True)
 
 	updates = db.relationship('Update', backref='author', cascade='all, delete')
+
+	is_reading = db.relationship('Book', backref='reader', cascade='all, delete')
 
 	def __init__(self, username, pw_hash):
 		self.username = username
@@ -44,7 +47,7 @@ class Book(db.Model):
 	rating = db.Column(db.Integer, nullable=True)
 	num_ratings = db.Column(db.Integer, nullable=True)
 
-	def __init__(self, title, genre, author, image):
+	def __init__(self, title, author, genre, image):
 			self.title = title
 			self.author = author
 			self.genre = genre
