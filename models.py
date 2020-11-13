@@ -9,7 +9,7 @@ class User(db.Model):
 
 	updates = db.relationship('Update', backref='author', cascade='all, delete')
 
-	def __init__(self, username, pw_hash, currently_reading):
+	def __init__(self, username, pw_hash):
 		self.username = username
 		self.pw_hash = pw_hash
 
@@ -39,13 +39,15 @@ class Update(db.Model):
 class Book(db.Model):
 	title = db.Column(db.String(80), primary_key=True)
 	author = db.Column(db.String(80), nullable=False)
+	genre = db.Column(db.String(80), nullable=False)
 	image = db.Column(db.String(80), nullable=False)
 	rating = db.Column(db.Integer, nullable=True)
 	num_ratings = db.Column(db.Integer, nullable=True)
 
-	def __init__(self, title, author, image):
+	def __init__(self, title, genre, author, image):
 			self.title = title
 			self.author = author
+			self.genre = genre
 			self.image = image
 
 	def __repr__(self):

@@ -34,7 +34,7 @@
                   <div class="col s8">
                     <p><b>{{ book.title }}</b></p>
                     <p> by <b>{{ book.author }}</b></p>
-                    <p> Genre: </p>
+                    <p> Genre: {{ book.genre }}</p>
                     <br/>
                     {% if book.rating is none %}
                       <p> No user ratings. </p>

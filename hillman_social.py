@@ -26,7 +26,6 @@ db.init_app(app)
 def initdb_command():
 	"""Creates the database tables."""
 	db.create_all()
-	owner = User('admin', generate_password_hash('admin'), None)
 
 	# add books to the db
 	file1 = open('books.txt', 'r')
@@ -34,9 +33,10 @@ def initdb_command():
 	# Strips the newline character
 	for line in Lines:
 		elems = line.split('|')
-		db.session.add(Book(elems[0], elems[1], elems[2]))
+		db.session.add(Book(elems[0], elems[1], elems[2], elems[3]))
 	file1.close()
 
+	owner = User('admin', generate_password_hash('admin'))
 	db.session.add(owner)
 	db.session.commit()
 	print('Initialized the database.')
@@ -82,7 +82,7 @@ def register():
 		elif not request.form['password']:
 			error = 'You have to enter a password'
 		else:
-			user = User(request.form['username'], generate_password_hash(request.form['password']), None)
+			user = User(request.form['username'], generate_password_hash(request.form['password']))
 			db.session.add(user)
 			db.session.commit()
 			db.session.flush()
@@ -192,6 +192,41 @@ def remove(username):
 		db.session.flush()
 		flash("User " + username + " successfully removed")
 		return render_template('manage.html', users=User.query.order_by(User.username.asc()).all(), error=error)
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/showbooks/")
+def showbooks():
+	if session['username'] == 'admin':
+		return render_template('showbooks.html', books=Book.query.all())
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/showusers/")
+def showusers():
+	if session['username'] == 'admin':
+		return render_template('showusers.html', users=User.query.all())
+	else:
+		flash("You do not have administrative priveleges")
+		return redirect(url_for('timeline'))
+
+@app.route("/loadusers/")
+def loadusers():
+	if session['username'] == 'admin':
+		file1 = open('users.txt', 'r')
+		Lines = file1.readlines()
+
+		# Strips the newline character
+		for line in Lines:
+			elems = line.split('|')
+			db.session.add(User(elems[0], generate_password_hash('p')))
+			db.session.commit()
+			db.session.flush()
+		file1.close()
+
+		return redirect(url_for('manage'))
 	else:
 		flash("You do not have administrative priveleges")
 		return redirect(url_for('timeline'))
